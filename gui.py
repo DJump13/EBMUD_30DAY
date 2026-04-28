@@ -8,7 +8,7 @@ from pipeline import process_file, write_output
 def run_gui():
     root = tk.Tk()
     root.title('SWRCB 30DayRule Calculator')
-    root.geometry('760x580')
+    # root.geometry('760x580')
     root.resizable(False, False)
 
     background_color = '#f3f6f8'
@@ -93,7 +93,7 @@ def run_gui():
 
     def render_main_view():
         clear_view()
-        root.geometry('550x625')
+        # root.geometry('550x625')
         selected_path.set('')
 
         selected_name = tk.StringVar(value='No file selected yet')
@@ -208,7 +208,7 @@ def run_gui():
         path_label = tk.Label(
             file_card,
             text='No file path available yet',
-            wraplength=660,
+            wraplength=370,
             justify='left',
             font=('Helvetica', 10),
             bg='#f9fbfc',
@@ -295,7 +295,7 @@ def run_gui():
 
             selected_path.set(filepath)
             selected_name.set(os.path.basename(filepath))
-            path_label.configure(text=filepath)
+            path_label.configure(text=os.path.normpath(filepath))
             reset_button.configure_button(neutral_button, text_color, 'hand2', True)
             set_process_button_style('ready')
             update_status('Click "Process File" and choose where to save the output CSV.', success_color)
@@ -380,7 +380,7 @@ def run_gui():
 
     def render_completion_view(output_filepath):
         clear_view()
-        root.geometry('550x275')
+        # root.geometry('550x275')
 
         completion_card = tk.Frame(
             content_frame,
