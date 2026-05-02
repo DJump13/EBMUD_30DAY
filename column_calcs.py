@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 def storage_change(df):
@@ -15,11 +16,19 @@ def storage_gain(df):
     return df
 
 
-def moving_max_from_start_date(df):
-    #FIGURE OUT START DATE THING
-    # start_date = '2017-12-31'
-    # filtered_df = df[df['Date'] >= start_date]
+def moving_max_from_start_date(df, start_date=None):
     df['Moving Max from Start Date'] = df['Reservoir Volume'].cummax()
+
+    if start_date is None:
+        return df
+
+    start_date = pd.Timestamp(start_date)
+    date_values = pd.to_datetime(df['Date'])
+    reset_mask = date_values >= start_date
+
+    if reset_mask.any():
+        df.loc[reset_mask, 'Moving Max from Start Date'] = df.loc[reset_mask, 'Reservoir Volume'].cummax()
+
     return df
 
 
@@ -120,5 +129,24 @@ def the_rest(df):
     df['WD'] = r_arr
     df['WD from Storage'] = s_arr
     df['Regulatory WD'] = t_arr
+
+    return df
+
+
+def category(df):
+    df = df.copy()
+    df.loc[:, 'Category'] = np.select(
+        [
+            df['Initial Collection to Storage'] != 0,
+            df['Refill Collection'] > 0,
+            df['Regulatory Collection to Storage'] > 0,
+            df['Regulatory WD'] != 0,
+            df['WD from Storage'] != 0
+        ],
+        ['initial', 'refill', 'reg_collection', 'reg_wd', 'wd'],
+        default=None
+    )
+
+    df.loc[:, 'Category'] = df['Category'].ffill()
 
     return df

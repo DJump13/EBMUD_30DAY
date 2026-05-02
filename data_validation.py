@@ -3,11 +3,10 @@ import warnings
 import pandas as pd
 
 
-CANONICAL_COLUMNS = {
+NAMED_COLUMN_ALIASES = {
     "Date": {"date", "datetime"},
     "Year": {"year"},
     "Month": {"month"},
-    "Reservoir Volume": {"reservoir volume", "reservoir a", "volume", "storage"},
 }
 
 
@@ -19,7 +18,7 @@ def rename_to_canonical_columns(df):
     renamed_columns = {}
     used_columns = set()
 
-    for canonical_name, aliases in CANONICAL_COLUMNS.items():
+    for canonical_name, aliases in NAMED_COLUMN_ALIASES.items():
         for original_name in df.columns:
             if original_name in used_columns:
                 continue
@@ -27,6 +26,14 @@ def rename_to_canonical_columns(df):
                 renamed_columns[original_name] = canonical_name
                 used_columns.add(original_name)
                 break
+
+    unassigned_columns = [
+        column_name
+        for column_name in df.columns
+        if column_name not in used_columns
+    ]
+    if len(unassigned_columns) == 1:
+        renamed_columns[unassigned_columns[0]] = "Reservoir Volume"
 
     return df.rename(columns=renamed_columns)
 
@@ -50,17 +57,23 @@ def clean_dataframe(df):
 
 
 def validate_columns(df):
+    if len(df.columns) != 4:
+        raise ValueError(f'Needs exactly 4 columns: Date, Year, Month, Reservoir Volume')
+
     normalized_columns = {normalize_column_name(column_name) for column_name in df.columns}
-    missing = [
-        canonical_name
-        for canonical_name, aliases in CANONICAL_COLUMNS.items()
-        if normalized_columns.isdisjoint(aliases)
-    ]
+    missing = []
+    for canonical_name, aliases in NAMED_COLUMN_ALIASES.items():
+        if normalized_columns.isdisjoint(aliases):
+            missing.append(canonical_name)
+
     if missing:
         raise ValueError(f"Missing required columns: {missing}")
 
 
 def validate_types(df):
+    if df['Date'].isna().any():
+        raise ValueError("Column 'Date' must not contain blank values")
+
     if not pd.api.types.is_datetime64_any_dtype(df["Date"]):
         try:
             with warnings.catch_warnings():
