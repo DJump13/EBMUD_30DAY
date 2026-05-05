@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.11 (EBMUD_30DAY)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="occ_env" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (EBMUD30DAY)" project-jdk-type="Python SDK" />
 </project>
