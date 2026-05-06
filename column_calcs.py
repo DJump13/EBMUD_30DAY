@@ -96,6 +96,7 @@ def the_rest(df):
     n_arr = df['Regulatory Collection to Storage'].values
     q_arr = df['Storage Loss'].values
 
+    # initialize circularly-dependent columns
     o_arr = np.zeros(length)
     p_arr = np.zeros(length)
     r_arr = np.zeros(length)

@@ -14,7 +14,7 @@ class ReservoirApp:
         self.root.resizable(False, False)
 
         style = ttk.Style(root)
-        style.theme_use('clam')
+        style.theme_use('default')
 
         self.background_color = '#f3f6f8'
         self.panel_color = '#ffffff'
