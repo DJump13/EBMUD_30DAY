@@ -134,20 +134,30 @@ def the_rest(df):
     return df
 
 
+# def category(df):
+#     df = df.copy()
+#     df.loc[:, 'Category'] = np.select(
+#         [
+#             df['Initial Collection to Storage'] != 0,
+#             df['Refill Collection'] > 0,
+#             df['Regulatory Collection to Storage'] > 0,
+#             df['Regulatory WD'] != 0,
+#             df['WD from Storage'] != 0
+#         ],
+#         ['initial', 'refill', 'reg_collection', 'reg_wd', 'wd'],
+#         default=None
+#     )
+#
+#     df.loc[:, 'Category'] = df['Category'].ffill()
+#
+#     return df
+
 def category(df):
     df = df.copy()
-    df.loc[:, 'Category'] = np.select(
-        [
-            df['Initial Collection to Storage'] != 0,
-            df['Refill Collection'] > 0,
-            df['Regulatory Collection to Storage'] > 0,
-            df['Regulatory WD'] != 0,
-            df['WD from Storage'] != 0
-        ],
-        ['initial', 'refill', 'reg_collection', 'reg_wd', 'wd'],
-        default=None
-    )
-
+    df.loc[:, 'Category'] = df[['Initial Collection to Storage',
+                                'Refill Collection',
+                                'Regulatory Collection to Storage',
+                                'Regulatory WD',
+                                'WD from Storage']].abs().idxmax(axis=1)
     df.loc[:, 'Category'] = df['Category'].ffill()
-
     return df
