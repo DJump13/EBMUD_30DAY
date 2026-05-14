@@ -9,70 +9,10 @@ import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.collections import LineCollection
-import numpy as np
-import matplotlib.colors as mcolors
 
 import column_calcs as calc
 import data_validation as validation
 
-
-# def plot_data(df):
-#     color_map = {
-#         'Initial Collection to Storage': 'red',
-#         'Refill Collection': 'green',
-#         'Regulatory Collection to Storage': 'purple',
-#         'Regulatory WD': 'dodgerblue',
-#         'WD from Storage': 'black'
-#     }
-#
-#     legend_elements = [
-#         Line2D([0], [0], color='red', lw=1, label='Initial Storage'),
-#         Line2D([0], [0], color='green', lw=1, label='Refill Storage Collection'),
-#         Line2D([0], [0], color='purple', lw=1, label='Regulatory Collection'),
-#         Line2D([0], [0], color='dodgerblue', lw=1, label='Regulatory Withdrawal'),
-#         Line2D([0], [0], color='black', lw=1, label='Withdrawal from Storage'),
-#     ]
-#
-#     groups = (df['Category'] != df['Category'].shift()).cumsum()
-#
-#     fig, ax = plt.subplots()
-#
-#     ax.set_xlabel('Date')
-#     ax.set_ylabel('Reservoir Volume (acre-feet)')
-#
-#     ax.plot(df['Date'], df['Reservoir Volume'], color='lightgray', linewidth=1)
-#
-#     for _, g in df.groupby(groups):
-#         cat = g['Category'].iloc[0]
-#
-#         idx = g.index
-#         start = max(idx.min() - 1, 0)
-#         segment = df.loc[start:idx.max()]
-#
-#         ax.plot(segment['Date'], segment['Reservoir Volume'], color=color_map[cat], linewidth=1)
-#
-#     ax.legend(handles=legend_elements)
-#
-#     ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
-#     ax.xaxis.set_major_formatter(DateFormatter('%b %Y'))
-#     fig.autofmt_xdate(rotation=30, ha='right')
-#     print(df['Date'].max() - timedelta(days=30))
-#     ax.axvspan(mdates.date2num(df['Date'].max() - timedelta(days=30)), mdates.date2num(df['Date'].max()), color='red', alpha=0.25, label="No 30-day lookahead")
-#
-#     date_fmt = mdates.DateFormatter('%b %d, %Y')
-#     def format_hover(x, y):
-#         try:
-#             return f"Date: {date_fmt(x)} | Value: {y:.2f}"
-#         except (ValueError, OverflowError):
-#             return ""
-#
-#     ax.format_coord = format_hover
-#
-#     plt.minorticks_on()
-#     plt.tight_layout()
-#     fig.canvas.manager.set_window_title('Reservoir Storage Plot')
-#     plt.show(block=False)
 
 def plot_data(df):
     color_map = {
