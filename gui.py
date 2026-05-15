@@ -588,34 +588,6 @@ class ReservoirApp:
         self.set_button_style(self.save_button, 'ready')
         self.set_button_style(self.plot_button, 'ready')
 
-        # save_path = filedialog.asksaveasfilename(
-        #     title='Save Output CSV As',
-        #     defaultextension='.csv',
-        #     initialfile='CALCULATED_DATA.csv',
-        #     filetypes=[('CSV files', '*.csv'), ('All files', '*.*')],
-        # )
-        # self.root.lift()
-        # self.root.focus_force()
-        # if not save_path:
-        #     self.update_status('Save cancelled. The input file is still selected and ready to process.', self.warning_color)
-        #     return
-        #
-        # self.set_busy_state()
-
-        # try:
-        #     start_date = self.calendar.selection_get()
-        #     df = process_file(input_filepath, start_date)
-        #     write_output(df, save_path)
-        #     plot_data(df)
-        # except Exception as exc:
-        #     self.restore_ready_state_after_error()
-        #     self.update_status('Processing failed. Review the error message and adjust the input file if needed.', self.warning_color)
-        #     messagebox.showerror('Processing Failed', str(exc))
-        #     self.root.lift()
-        #     self.root.focus_force()
-        #     return
-
-        # self.render_completion_view(save_path)
 
     def save_file(self):
         if self.df.empty or self.save_button.mode == 'inactive':
@@ -666,7 +638,7 @@ class ReservoirApp:
 
 
     def set_busy_state(self):
-        self.set_process_button_style('busy')
+        self.set_button_style(self.process_button, 'busy')
         self.choose_button.configure_button(self.neutral_button, self.inactive_button_text, 'arrow', False)
         self.reset_button.configure_button(self.inactive_button, self.inactive_button_text, 'arrow', False)
         self.update_status('Processing file. This may take a moment.', self.accent_color)
@@ -675,67 +647,10 @@ class ReservoirApp:
     def restore_ready_state_after_error(self):
         self.choose_button.configure_button(self.neutral_button, self.text_color, 'hand2', True)
         self.reset_button.configure_button(self.neutral_button, self.text_color, 'hand2', True)
-        self.set_process_button_style('ready')
-
-    def render_completion_view(self, output_filepath):
-        self.clear_view()
-
-        completion_card = self.make_card(self.content_frame, padx=24, pady=24)
-        completion_card.pack(fill='both', expand=True)
-
-        tk.Label(
-            completion_card,
-            text='Processing Complete',
-            font=('Helvetica', 20, 'bold'),
-            bg=self.panel_color,
-            fg=self.success_color,
-        ).pack(anchor='w')
-        tk.Label(
-            completion_card,
-            text='The output file was created successfully.',
-            font=('Helvetica', 11),
-            bg=self.panel_color,
-            fg=self.text_color,
-        ).pack(anchor='w', pady=(8, 20))
-        tk.Label(
-            completion_card,
-            text='Saved output',
-            font=('Helvetica', 10, 'bold'),
-            bg=self.panel_color,
-            fg=self.muted_text,
-        ).pack(anchor='w')
-        tk.Label(
-            completion_card,
-            text=output_filepath,
-            wraplength=660,
-            justify='left',
-            font=('Helvetica', 11),
-            bg=self.panel_color,
-            fg=self.text_color,
-        ).pack(anchor='w', pady=(6, 24))
-
-        action_row = tk.Frame(completion_card, bg=self.panel_color)
-        action_row.pack(anchor='w')
-        self.make_action_button(
-            action_row,
-            'Process Another File',
-            self.render_main_view,
-            20,
-            self.neutral_button,
-            self.text_color,
-            hover_bg=self.neutral_button_hover,
-            cursor='hand2',
-        ).pack(side='left', padx=(0, 10))
-        self.make_action_button(
-            action_row,
-            'Close',
-            self.root.destroy,
-            12,
-            self.neutral_button,
-            self.text_color,
-            hover_bg=self.neutral_button_hover,
-            cursor='hand2',
-        ).pack(side='left')
+        self.df = pd.DataFrame()
+        self.set_button_style(self.process_button, 'ready')
+        self.set_button_style(self.save_button, 'inactive')
+        self.set_button_style(self.plot_button, 'inactive')
 
 
 def run_gui():
