@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
+import pandas as pd
 
 import tkcalendar
 
@@ -25,25 +26,32 @@ class ReservoirApp:
         self.success_color = '#1f7a4d'
         self.warning_color = '#b44d12'
         self.button_text_on_light = '#102a43'
-        self.ready_button = '#1f7a4d'
+        self.ready_button = 'green'
+        self.ready_button_hover = 'SeaGreen4'
         self.inactive_button = '#e8eef3'
         self.inactive_button_text = '#7b8794'
         self.neutral_button = '#d9e2ec'
         self.neutral_button_hover = '#c7d3df'
+        self.close_button = 'brown1'
+        self.close_button_hover = 'IndianRed1'
 
+        self.df = pd.DataFrame()
         self.selected_path = tk.StringVar(value='')
         self.selected_name = tk.StringVar(value='No file selected yet')
         self.status_text = tk.StringVar(value='Choose a .csv or .xlsx input file to begin.')
         self.selected_date_label = tk.StringVar(value='Default start date')
         self.selected_date_text = tk.StringVar(value='Select a valid file')
 
-        self.process_button_state = {'mode': 'inactive'}
-
         self.path_label = None
         self.status_label = None
         self.choose_button = None
         self.reset_button = None
-        self.process_button = None
+        self.process_button = tk.Button()
+        self.save_button = tk.Button()
+        self.plot_button = tk.Button()
+        self.process_button.mode = 'inactive'
+        self.save_button.mode = 'inactive'
+        self.plot_button.mode = 'inactive'
         self.calendar = None
         self.calendar_container = None
         self.calendar_overlay = None
@@ -152,19 +160,32 @@ class ReservoirApp:
         self.status_text.set('Choose a .csv or .xlsx input file to begin.')
         self.selected_date_label.set('Default start date')
         self.selected_date_text.set('Select a valid file')
-        self.process_button_state = {'mode': 'inactive'}
+        self.process_button.mode = 'inactive'
 
     def build_header(self):
         header_frame = tk.Frame(self.content_frame, bg=self.background_color)
         header_frame.pack(fill='x', pady=(0, 14))
 
+        title_frame = tk.Frame(header_frame, bg=self.background_color)
+        title_frame.pack(side="top", fill="x")
+
         tk.Label(
-            header_frame,
-            text='Reservoir Data Processor',
+            title_frame,
+            text='EBMUD 30-Day Rule Calculator',
             font=('Helvetica', 20, 'bold'),
             bg=self.background_color,
             fg=self.text_color,
-        ).pack(anchor='w')
+        ).pack(side='left')
+        self.make_action_button(
+            title_frame,
+            'Close',
+            self.root.destroy,
+            12,
+            self.close_button,
+            'white',
+            hover_bg=self.close_button_hover,
+            cursor='hand2',
+        ).pack(side='right')
         tk.Label(
             header_frame,
             text='Choose an input file first, then process it and save the output CSV.',
@@ -312,14 +333,14 @@ class ReservoirApp:
             font=('Helvetica', 10, 'bold'),
             bg='#f9fbfc',
             fg=self.muted_text,
-        ).pack(side=tk.LEFT, anchor='w')
+        ).pack(side='left', anchor='w')
         tk.Label(
             date_summary_row,
             textvariable=self.selected_date_text,
             font=('Helvetica', 12, 'bold'),
             bg='#f9fbfc',
             fg=self.text_color,
-        ).pack(side=tk.RIGHT, anchor='e')
+        ).pack(side='right', anchor='e')
 
         self.calendar_container = tk.Frame(parent, bg=self.panel_color)
         self.calendar_container.pack(padx=10, pady=10)
@@ -373,10 +394,37 @@ class ReservoirApp:
             16,
             self.inactive_button,
             self.inactive_button_text,
-            hover_bg=self.ready_button,
+            hover_bg=self.ready_button_hover,
             cursor='arrow',
         )
+        self.process_button.mode = 'inactive'
         self.process_button.pack(anchor='w', pady=(0, 8))
+
+        self.save_button = self.make_action_button(
+            parent,
+            'Save File',
+            self.save_file,
+            16,
+            self.inactive_button,
+            self.inactive_button_text,
+            hover_bg=self.ready_button_hover,
+            cursor='arrow',
+        )
+        self.save_button.mode = 'inactive'
+        self.save_button.pack(anchor='w', pady=(0, 8))
+
+        self.plot_button = self.make_action_button(
+            parent,
+            'Plot Hydrograph',
+            self.plot_hydrograph,
+            16,
+            self.inactive_button,
+            self.inactive_button_text,
+            hover_bg=self.ready_button_hover,
+            cursor='arrow',
+        )
+        self.plot_button.mode = 'inactive'
+        self.plot_button.pack(anchor='w', pady=(0, 8))
 
     def build_footer(self, parent):
         status_footer = tk.Frame(parent, bg=self.panel_color)
@@ -391,20 +439,20 @@ class ReservoirApp:
             bg=self.panel_color,
             fg=self.accent_color,
         )
-        self.status_label.pack(side=tk.BOTTOM, anchor='w')
+        self.status_label.pack(side='bottom', anchor='w')
 
     def update_status(self, message, color=None):
         self.status_text.set(message)
         self.status_label.configure(fg=color or self.accent_color)
 
-    def set_process_button_style(self, mode):
-        self.process_button_state['mode'] = mode
+    def set_button_style(self, button, mode):
+        button.mode = mode
         if mode == 'ready':
-            self.process_button.configure_button(self.ready_button, 'white', 'hand2', True)
+            button.configure_button(self.ready_button, 'white', 'hand2', True)
         elif mode == 'busy':
-            self.process_button.configure_button('#9fb3c8', self.button_text_on_light, 'arrow', False)
+            button.configure_button('#9fb3c8', self.button_text_on_light, 'arrow', False)
         else:
-            self.process_button.configure_button(self.inactive_button, self.inactive_button_text, 'arrow', True)
+            button.configure_button(self.inactive_button, self.inactive_button_text, 'arrow', True)
 
     def show_calendar_overlay(self):
         self.calendar_container.update_idletasks()
@@ -429,7 +477,9 @@ class ReservoirApp:
         self.selected_date_text.set('Select a valid file')
         self.show_calendar_overlay()
         self.reset_button.configure_button(self.inactive_button, self.inactive_button_text, 'arrow', True)
-        self.set_process_button_style('inactive')
+        self.set_button_style(self.process_button, 'inactive')
+        self.set_button_style(self.save_button, 'inactive')
+        self.set_button_style(self.plot_button, 'inactive')
         self.update_status('Choose a .csv or .xlsx input file to begin.')
 
     def update_selected_date_display(self, selected_date, label_text='Selected start date'):
@@ -437,7 +487,16 @@ class ReservoirApp:
         self.selected_date_text.set(selected_date.strftime('%b %d, %Y'))
 
     def on_calendar_selected(self, _event=None):
-        self.update_selected_date_display(self.calendar.selection_get())
+        selected = self.calendar.selection_get()
+        self.df = pd.DataFrame()
+        self.update_selected_date_display(selected)
+        self.update_status(
+            f'Selected new start date: {selected.strftime("%b %d, %Y")}. Click "Process File" when ready.',
+            self.success_color,
+        )
+        self.set_button_style(self.process_button, 'ready')
+        self.set_button_style(self.save_button, 'inactive')
+        self.set_button_style(self.plot_button, 'inactive')
 
     def update_calendar_bounds(self, df):
         date_values = df['Date'].dt.date
@@ -492,7 +551,7 @@ class ReservoirApp:
             self.root.focus_force()
             return
 
-        self.set_process_button_style('ready')
+        self.set_button_style(self.process_button, 'ready')
         self.update_status(
             f'Valid file selected. Calendar range: {min_date:%b %d, %Y} to {max_date:%b %d, %Y}.',
             self.success_color,
@@ -502,6 +561,65 @@ class ReservoirApp:
         input_filepath = self.selected_path.get()
         if not input_filepath:
             self.update_status('Select an input CSV or Excel file first.', self.warning_color)
+            return
+        if self.process_button.mode == 'inactive':
+            self.update_status('You have already processed this file.', self.warning_color)
+            return
+
+        try:
+            start_date = self.calendar.selection_get()
+            self.df = process_file(input_filepath, start_date)
+        except Exception as exc:
+            self.restore_ready_state_after_error()
+            self.update_status('Processing failed. Review the error message and adjust the input file if needed.', self.warning_color)
+            messagebox.showerror('Processing Failed', str(exc))
+            self.root.lift()
+            self.root.focus_force()
+            return
+
+        self.update_status(
+            f'File successfully processed with start date: {start_date.strftime("%b %d, %Y")}. '
+            f'You can now save and/or plot data.',
+            self.success_color,
+        )
+
+        #enable save and plot buttons
+        self.set_button_style(self.process_button, 'inactive')
+        self.set_button_style(self.save_button, 'ready')
+        self.set_button_style(self.plot_button, 'ready')
+
+        # save_path = filedialog.asksaveasfilename(
+        #     title='Save Output CSV As',
+        #     defaultextension='.csv',
+        #     initialfile='CALCULATED_DATA.csv',
+        #     filetypes=[('CSV files', '*.csv'), ('All files', '*.*')],
+        # )
+        # self.root.lift()
+        # self.root.focus_force()
+        # if not save_path:
+        #     self.update_status('Save cancelled. The input file is still selected and ready to process.', self.warning_color)
+        #     return
+        #
+        # self.set_busy_state()
+
+        # try:
+        #     start_date = self.calendar.selection_get()
+        #     df = process_file(input_filepath, start_date)
+        #     write_output(df, save_path)
+        #     plot_data(df)
+        # except Exception as exc:
+        #     self.restore_ready_state_after_error()
+        #     self.update_status('Processing failed. Review the error message and adjust the input file if needed.', self.warning_color)
+        #     messagebox.showerror('Processing Failed', str(exc))
+        #     self.root.lift()
+        #     self.root.focus_force()
+        #     return
+
+        # self.render_completion_view(save_path)
+
+    def save_file(self):
+        if self.df.empty or self.save_button.mode == 'inactive':
+            self.update_status('Process file first.', self.warning_color)
             return
 
         save_path = filedialog.asksaveasfilename(
@@ -513,16 +631,11 @@ class ReservoirApp:
         self.root.lift()
         self.root.focus_force()
         if not save_path:
-            self.update_status('Save cancelled. The input file is still selected and ready to process.', self.warning_color)
+            self.update_status('Save cancelled. The input file is still selected.', self.warning_color)
             return
 
-        self.set_busy_state()
-
         try:
-            start_date = self.calendar.selection_get()
-            df = process_file(input_filepath, start_date)
-            write_output(df, save_path)
-            plot_data(df)
+            write_output(self.df, save_path)
         except Exception as exc:
             self.restore_ready_state_after_error()
             self.update_status('Processing failed. Review the error message and adjust the input file if needed.', self.warning_color)
@@ -531,7 +644,26 @@ class ReservoirApp:
             self.root.focus_force()
             return
 
-        self.render_completion_view(save_path)
+        self.update_status(f'Data successfully saved to {save_path}. ', self.success_color)
+
+
+    def plot_hydrograph(self):
+        if self.df.empty or self.plot_button.mode == 'inactive':
+            self.update_status('Process file first.', self.warning_color)
+            return
+
+        try:
+            plot_data(self.df)
+        except Exception as exc:
+            self.restore_ready_state_after_error()
+            self.update_status('Processing failed. Review the error message and adjust the input file if needed.', self.warning_color)
+            messagebox.showerror('Processing Failed', str(exc))
+            self.root.lift()
+            self.root.focus_force()
+            return
+
+        self.update_status(f'Data successfully plotted. ', self.success_color)
+
 
     def set_busy_state(self):
         self.set_process_button_style('busy')
