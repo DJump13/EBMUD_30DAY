@@ -1,4 +1,4 @@
-## What is this?
+# What is this?
 
 This project is a Python app. You can either:
 
@@ -7,9 +7,10 @@ This project is a Python app. You can either:
 
 ---
 
-# Running the App (No Python Needed)
+## Running the App (No Python Needed)
 
 If you want to download the ready-to-use version:
+
 1. Go to Releases
 2. Download the file from the most recent version for your OS
 
@@ -20,11 +21,11 @@ If you want to download the ready-to-use version:
 
 ---
 
-# Want to Edit the Code? (Forking the Project)
+## Want to Edit the Code? (Forking the Project)
 
 If you want to make changes, start by making your own copy.
 
-## Step 1 — Fork the repo
+### Step 1 — Fork the repo
 
 * Go to the project on GitHub
 * Click **Fork** (top right)
@@ -33,7 +34,7 @@ This creates your own version of the project.
 
 ---
 
-## Step 2 — Download your copy
+### Step 2 — Download your copy
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/REPO_NAME.git
@@ -42,7 +43,7 @@ cd REPO_NAME
 
 ---
 
-## Step 3 — (Optional) Link original project
+### Step 3 — (Optional) Link original project
 
 This lets you get updates later:
 
@@ -52,13 +53,13 @@ git remote add upstream https://github.com/ORIGINAL_OWNER/REPO_NAME.git
 
 ---
 
-# Setting Up Python
+## Setting Up Python
 
 You need a **virtual environment**. Think of it as a clean workspace just for this project.
 
 ---
 
-## Step 1 — Create a virtual environment
+### Step 1 — Create a virtual environment
 
 Most systems use `python3`:
 
@@ -68,15 +69,15 @@ python3 -m venv .venv
 
 ---
 
-## Step 2 — Turn it on (activate it)
+### Step 2 — Turn it on (activate it)
 
-### macOS/Linux:
+#### macOS/Linux
 
 ```bash
 source .venv/bin/activate
 ```
 
-### Windows:
+#### Windows
 
 ```bash
 .venv\Scripts\activate
@@ -84,13 +85,13 @@ source .venv/bin/activate
 
 You should now see something like:
 
-```
+```bash
 (.venv)
 ```
 
 ---
 
-## Step 3 — Install required packages
+### Step 3 — Install required packages
 
 ```bash
 pip3 install -r requirements.txt
@@ -98,7 +99,7 @@ pip3 install -r requirements.txt
 
 ---
 
-## Step 4 — Run the app
+### Step 4 — Run the app
 
 ```bash
 python3 main.py
@@ -106,7 +107,7 @@ python3 main.py
 
 ---
 
-# Using PyCharm (Optional)
+## Using PyCharm (Optional)
 
 If you use PyCharm:
 
@@ -114,13 +115,13 @@ If you use PyCharm:
 2. Go to **Settings → Python Interpreter**
 3. Select:
 
-   ```
+   ```bash
    .venv/bin/python
    ```
 
 ---
 
-# Packaging the App (Making the Executable)
+## Packaging the App (Making the Executable)
 
 This turns your Python app into something people can double-click.
 
@@ -128,7 +129,7 @@ We use PyInstaller for this.
 
 ---
 
-## Important
+### Important
 
 You must build on each system:
 
@@ -137,7 +138,7 @@ You must build on each system:
 
 ---
 
-## Step 1 — Install PyInstaller
+### Step 1 — Install PyInstaller
 
 ```bash
 pip3 install pyinstaller
@@ -145,15 +146,15 @@ pip3 install pyinstaller
 
 ---
 
-## Step 2 — Build the app
+### Step 2 — Build the app
 
-### Fast startup (recommended)
+#### Fast startup (recommended)
 
 ```bash
 pyinstaller --windowed main.py
 ```
 
-### Single file (slower startup)
+#### Single file (slower startup)
 
 ```bash
 pyinstaller --onefile --windowed main.py
@@ -161,7 +162,7 @@ pyinstaller --onefile --windowed main.py
 
 ---
 
-## Step 3 — Find your app
+### Step 3 — Find your app
 
 Look in the `dist` folder:
 
@@ -170,13 +171,13 @@ Look in the `dist` folder:
 
 ---
 
-# Fixing Common Errors
+## Fixing Common Errors
 
-## Missing module error
+### Missing module error
 
 Example:
 
-```
+```bash
 ModuleNotFoundError: No module named 'xyz'
 ```
 
@@ -188,15 +189,15 @@ pyinstaller --windowed --hidden-import=xyz main.py
 
 ---
 
-## 🔄 Clean rebuild (if things break)
+### 🔄 Clean rebuild (if things break)
 
-### macOS/Linux:
+#### macOS/Linux
 
 ```bash
 rm -rf build dist *.spec
 ```
 
-### Windows:
+#### Windows
 
 ```bat
 rmdir /s /q build
@@ -208,7 +209,7 @@ Then run the build again.
 
 ---
 
-# Key Ideas (Simple Version)
+## Key Ideas (Simple Version)
 
 * A **virtual environment** keeps your project’s packages separate
 * You only need Python if you’re editing the project
@@ -217,7 +218,7 @@ Then run the build again.
 
 ---
 
-# Quick Summary
+## Quick Summary
 
 | What you want to do | What to do                            |
 | ------------------- | ------------------------------------- |
@@ -228,7 +229,7 @@ Then run the build again.
 
 ---
 
-# Need Help?
+## Need Help?
 
 If something isn’t working:
 
