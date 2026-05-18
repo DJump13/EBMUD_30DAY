@@ -11,7 +11,7 @@ This project is a Python app. You can either:
 
 If you want to download the ready-to-use version:
 1. Go to Releases
-2. Download the .zip from the most recent version for your OS and follow the instructions
+2. Download the file from the most recent version for your OS
 
 ### Important
 
