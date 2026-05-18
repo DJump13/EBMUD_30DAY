@@ -1,0 +1,4 @@
+# Ignore PyInstaller outputs
+build/
+dist/
+*.spec
