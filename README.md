@@ -9,24 +9,9 @@ This project is a Python app. You can either:
 
 # Running the App (No Python Needed)
 
-If you downloaded the ready-to-use version:
-
-## macOS
-
-1. Open the `dist` folder
-2. If you see a file ending in `.app` → double-click it
-3. If you see a folder (like `MyApp/`):
-
-   * Open it
-   * Double-click the file named `MyApp`
-
-## Windows
-
-1. Open the `dist` folder
-2. Double-click:
-
-   * `MyApp.exe`, OR
-   * open the folder and run `MyApp.exe`
+If you want to download the ready-to-use version:
+1. Go to Releases
+2. Download the .zip from the most recent version for your OS and follow the instructions
 
 ### Important
 
